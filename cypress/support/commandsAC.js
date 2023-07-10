@@ -1,0 +1,21 @@
+Cypress.Commands.add('addcustomer',(elementName,pageName,pageLink) => {
+    cy.xpath('//*[@id="main"]/div/form/div/div[1]/label')
+        .should('be.visible')
+        .click({force:true})
+    cy.xpath('//*[@id="fname"]')
+        .type('Jekson')
+    cy.xpath('//*[@id="lname"]')
+        .type('Pollock')
+    cy.xpath('//*[@id="email"]')
+        .type('Jekpoll@yahoo.com')
+    cy.xpath('//*[@id="main"]/div/form/div/div[7]')
+        .type('47 Horatio Street ')
+    cy.xpath('//*[@id="telephoneno"]')
+        .type('+54929821234')
+    cy.xpath('//*[@id="main"]/div/form/div/div[9]/ul/li[1]/input')
+        .should('be.visible')
+        .click()
+    cy.url().should('include','uid')
+})
+
+

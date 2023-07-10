@@ -29,6 +29,7 @@ Cypress.on("uncaught:exception",(error) =>{
 })
 
 import './commandsPP'
+import './commandsAC'
 
 Cypress.on("uncaught:exception",(error) =>{
     console.error(error)
