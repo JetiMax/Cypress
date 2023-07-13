@@ -249,11 +249,8 @@ Cypress.Commands.add('buttonReset', (elementName, pageName, pageLink) => {
 
     cy.log('button Submit')
     cy.xpath('//*[@id="main"]/div/form/div/div[9]/ul/li[1]/input')
-        .should('be.visible')
         .click()
-    cy.log("Checking that we are on the page")
-    cy.url()
-        .should('eq','https://demo.guru99.com/telecom/addcustomer.php')
+    cy.url().should('include','uid')
 });
 
 

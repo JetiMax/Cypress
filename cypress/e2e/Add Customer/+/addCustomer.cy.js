@@ -17,7 +17,7 @@ describe("Add Customer", () => {
     it("Checking click empty area", () => {
         cy.visit('https://demo.guru99.com/telecom/addcustomer.php');
         const x = 300;
-        const y = 300;
+        const y = 350;
         cy.get('body').click(x, y);
         cy.url()
             .should('eq', 'https://demo.guru99.com/telecom/addcustomer.php')
