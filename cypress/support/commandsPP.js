@@ -11,19 +11,37 @@ Cypress.Commands.add('getCorrectPP',(elementName,pageName,pageLink) => {
         .should('have.value', '2028')
     cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
         .should('be.visible').click()
-    cy.url().should('include','uid')
- })
+    cy.xpath('//*[@id="three"]/div/div/table/tbody/tr[1]/td[2]')
+        .invoke('text')
+        .then((text) => {
+            {CustomerID = text}
+            var CustomerID = text;
 
+            cy.visit('https://demo.guru99.com/telecom/billing.php');
+            cy.xpath('//*[@id="customer_id"]')
+                .type(`${CustomerID}`, {delay: 100})
+
+            cy.xpath('//*[@id="main"]/div/form/div/div[6]/input')
+                .click()
+
+            cy.xpath('//*[@id="main"]/div/h3',{ timeout: 10000 })
+                .should(($h3) => {
+                    const text = $h3.text().trim();
+                    const regex = /Customer ID:-\s*(\d+)/;
+                    const match = text.match(regex);
+                    expect(match[0]).to.equal( 'Customer ID:-' + CustomerID);
+                })
+        })
+ });
 Cypress.Commands.add('expiration',(elementName,pageName,pageLink) => {
     cy.xpath('//*[@id="month"]').select('Month')
         .should('not.be.selected', 'Month')
     cy.xpath('//*[@id="year"]').select('Year')
         .should('not.be.selected', 'Year')
-})
-
-Cypress.Commands.add('wrongCardValue',(elementName,pageName,pageLink) => {
+});
+Cypress.Commands.add('wrongCardNumber',(elementName,pageName,pageLink) => {
     cy.xpath('//*[@id="card_nmuber"]').click({force:true})
-        .type('4532375619520872')
+        .type('1010101010101010')
     cy.xpath('//*[@id="cvv_code"]')
         .type('167')
     cy.xpath('//*[@id="month"]').select('11')
@@ -32,8 +50,38 @@ Cypress.Commands.add('wrongCardValue',(elementName,pageName,pageLink) => {
         .should('have.value', '2022')
     cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
         .should('be.visible').click()
-    cy.url().should('include','uid')
-})
+    cy.get('selector-pop-up')
+        .should('have.text', 'wrong map value');
+});
+Cypress.Commands.add('wrongCvv',(elementName,pageName,pageLink) => {
+    cy.xpath('//*[@id="card_nmuber"]').click({force: true})
+        .type('4532375619520872')
+    cy.xpath('//*[@id="cvv_code"]')
+        .type('16')
+    cy.xpath('//*[@id="month"]').select('11')
+        .should('have.value', '11')
+    cy.xpath('//*[@id="year"]').select('2022')
+        .should('have.value', '2022')
+    cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
+        .should('be.visible').click()
+    cy.get('selector-pop-up')
+        .should('have.text', 'wrong map value');
+});
+
+Cypress.Commands.add('cardExpired',(elementName,pageName,pageLink) => {
+    cy.xpath('//*[@id="card_nmuber"]').click({force: true})
+        .type('4532375619520872')
+    cy.xpath('//*[@id="cvv_code"]')
+        .type('16')
+    cy.xpath('//*[@id="month"]').select('11')
+        .should('have.value', '11')
+    cy.xpath('//*[@id="year"]').select('2017')
+        .should('have.value', '2022')
+    cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
+        .should('be.visible').click()
+    cy.get('selector-pop-up')
+        .should('have.text', 'cardExpired');
+});
 
 Cypress.Commands.add('americanExpress',(elementName,pageName,pageLink) => {
     cy.xpath('//*[@id="card_nmuber"]').click({force:true})
@@ -46,51 +94,93 @@ Cypress.Commands.add('americanExpress',(elementName,pageName,pageLink) => {
         .should('have.value', '2024')
     cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
         .should('be.visible').click()
-    cy.url().should('include','uid')
+    cy.xpath('//*[@id="three"]/div/div/table/tbody/tr[1]/td[2]')
+        .invoke('text')
+        .then((text) => {
+            {CustomerID = text}
+            var CustomerID = text;
+
+            cy.visit('https://demo.guru99.com/telecom/billing.php');
+            cy.xpath('//*[@id="customer_id"]')
+                .type(`${CustomerID}`, {delay: 100})
+
+            cy.xpath('//*[@id="main"]/div/form/div/div[6]/input')
+                .click()
+
+            cy.xpath('//*[@id="main"]/div/h3',{ timeout: 10000 })
+                .should(($h3) => {
+                    const text = $h3.text().trim();
+                    const regex = /Customer ID:-\s*(\d+)/;
+                    const match = text.match(regex);
+                    expect(match[0]).to.equal( 'Customer ID:-' + CustomerID);
+                })
+        })
 })
 
-Cypress.Commands.add('letters&SpecialCharacters',(elementName,pageName,pageLink) => {
-    cy.xpath('//*[@id="card_nmuber"]').click({force:true})
-        .type('gkkpsf-/-')
+Cypress.Commands.add('сharactersSpecialСharacters',(elementName,pageName,pageLink) => {
+    cy.xpath('//*[@id="card_nmuber"]')
+        .click({force:true})
+        .type('-/-')
+    cy.xpath('//*[@id="message1"]')
+        .should('have.text', 'Special characters are not allowed')
+    cy.focused().clear()
+    cy.xpath('//*[@id="card_nmuber"]')
+        .type('fff')
+    cy.xpath('//*[@id="message1"]')
+        .should('have.text', 'Characters are not allowed')
+
     cy.xpath('//*[@id="cvv_code"]')
-        .type('*+/-')
-    cy.xpath('//*[@id="month"]').select('10')
-        .should('have.value', '10')
-    cy.xpath('//*[@id="year"]').select('2028')
-        .should('have.value', '2028')
-    cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
-        .should('be.visible').click()
-    cy.url().should('include','uid')
+        .click({force:true})
+        .type('-/-')
+    cy.xpath('//*[@id="message1"]')
+        .should('have.text', 'Special characters are not allowed')
+    cy.focused().clear()
+    cy.xpath('//*[@id="message2"]')
+        .type('fff')
+    cy.xpath('//*[@id="message2"]')
+        .should('have.text', 'Characters are not allowed')
+
+
+
 })
 
-Cypress.Commands.add('fieldLen(max+1)',(elementName,pageName,pageLink) => {
-    cy.xpath('//*[@id="card_nmuber"]').click({force:true})
-        .type('37598765432100100')
-    cy.xpath('//*[@id="cvv_code"]')
-        .type('9784')
-    cy.xpath('//*[@id="month"]').select('10')
-        .should('have.value', '10')
-    cy.xpath('//*[@id="year"]').select('2028')
-        .should('have.value', '2028')
-    cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
-        .should('be.visible').click()
-    cy.url().should('include','uid')
-})
 
-Cypress.Commands.add('fieldLen(min)',(elementName,pageName,pageLink) => {
-    cy.xpath('//*[@id="card_nmuber"]').click({force:true})
-        .type('3')
-    cy.xpath('//*[@id="cvv_code"]')
-        .type('9')
-    cy.xpath('//*[@id="month"]').select('10')
-        .should('have.value', '10')
-    cy.xpath('//*[@id="year"]').select('2028')
-        .should('have.value', '2028')
-    cy.xpath('//*[@id="three"]/div/form/div[2]/div/ul/li/input')
-        .should('be.visible').click()
-    cy.url().should('include','uid')
-})
+Cypress.Commands.add('fieldLen',(elementName,pageName,pageLink) => {
+    const fields = [
+        {
+            selector: '[name="card_nmuber"]',
+            minLength: 1,
+            maxLenght: 16
+        },
+        {
+            selector: '[name="cvv_code"]',
+            minLength: 1,
+            maxLenght: 3
+        }
+    ];
 
+    fields.forEach((field) => {
+        cy.log("minLength");
+        cy.get(field.selector)
+            .should('be.visible')
+            .clear()
+            .type('7'.repeat(field.minLength - 1))
+            .should('not.have.value', '7'
+                .repeat(field.minLength - 1))
+
+        fields.forEach((field) => {
+            cy.log("maxLength");
+            cy.get(field.selector)
+                .should('be.visible')
+                .clear()
+                .type('8'.repeat(field.minLength + 1))
+                .should('not.have.value', '8'.repeat(field.minLength + 1))
+        })
+    })
+});
+
+
+});
 
 Cypress.Commands.add('stylePP',(elementName, pageLink) => {
 
@@ -251,3 +341,50 @@ Cypress.Commands.add('stylePP',(elementName, pageLink) => {
 
 
 });
+
+Cypress.Commands.add('lenPP', (elementName, pageLink) => {
+
+    const fields = [
+        {
+            selector: 'name="card_nmuber"',
+            minLength: 1,
+            maxLenght: 16
+        },
+        {
+            selector: '[name="cvv_code"]',
+            minLength: 1,
+            maxLenght: 3
+        }
+    ];
+    fields.forEach((field) => {
+        cy.log("minLength");
+        cy.get(field.selector)
+            .should('be.visible')
+            .clear()
+            .type('4'.repeat(field.minLength - 1))
+            .should('not.have.value', '4'
+                .repeat(field.minLength - 1))
+
+        fields.forEach((field) => {
+            cy.log("maxLength");
+            cy.get(field.selector)
+                .should('be.visible')
+                .clear()
+                .type('5'.repeat(field.minLength + 1))
+                .should('not.have.value', '5'.repeat(field.minLength + 1))
+        })
+    })
+});
+
+Cypress.Commands.add('lenMonthYear', (elementName, pageLink) => {
+    cy.xpath('//*[@id="month"]')
+        .select('Month')
+        .should('not.be.selected', 'Month')
+        .select('13')
+        .should('not.be.selected', '13')
+    cy.xpath('//*[@id="year"]')
+        .select('Year')
+        .should('not.be.selected', 'Year')
+        .select('2029')
+        .should('not.be.selected', '2029')
+})

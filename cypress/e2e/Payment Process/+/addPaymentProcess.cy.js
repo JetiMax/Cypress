@@ -3,7 +3,6 @@ describe("Payment Process", () => {
     it("Correct Payment Process", () => {
         cy.log("Open Payment Process");
         cy.visit("https://demo.guru99.com/payment-gateway/process_purchasetoy.php")
-        cy.log('Input fields')
         cy.getCorrectPP()
     })
 
@@ -19,29 +18,26 @@ describe("Payment Process", () => {
     it("Correct Payment Process AmericanExpress ", () => {
         cy.log("Open Payment Process");
         cy.visit("https://demo.guru99.com/payment-gateway/process_purchasetoy.php")
-        cy.log('Input fields')
         cy.americanExpress()
     })
 
     it("Dropdown expiration yard & month no clicable", () => {
         cy.log("Open Payment Process");
         cy.visit("https://demo.guru99.com/payment-gateway/process_purchasetoy.php")
-        cy.log('Input fields')
         cy.expiration()
     })
 
-    it("fieldLen(max+1)", () => {
+    it("field Len(min/max) Card Number,CVV Code", () => {
         cy.log("Open Payment Process");
         cy.visit("https://demo.guru99.com/payment-gateway/process_purchasetoy.php")
-        cy.log('Input fields')
-        cy.fieldLen(max+1)()
+        cy.lenPP()
     })
 
-    it("fieldLen(min)", () => {
+    it("Field dropdown Len(min/max) Expiration: Month,Year", () => {
         cy.log("Open Payment Process");
         cy.visit("https://demo.guru99.com/payment-gateway/process_purchasetoy.php")
-        cy.log('Input fields')
-        cy.fieldLen(min)()
+        cy.lenMonthYear()
     })
+
 });
 

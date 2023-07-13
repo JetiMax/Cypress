@@ -22,10 +22,6 @@ Cypress.Commands.add('addcustomerDone',(elementName,pageName,pageLink) => {
     cy.xpath('//*[@id="main"]/div/form/div/div[9]/ul/li[1]/input')
         .should('be.visible')
         .click()
-    cy.log("There is a uid in the address bar")
-    cy.url()
-        .should('include', 'uid')
-
     cy.xpath('//*[@id="main"]/div/div/table/tbody/tr[1]/td[2]/h3')
         .invoke('text')
         .then((text) => {
