@@ -161,7 +161,7 @@ Cypress.Commands.add('len', (elementName, pageLink) => {
     })
 });
 
-Cypress.Commands.add('num&spec', (elementName, pageLink) => {
+Cypress.Commands.add('numSpec', (elementName, pageLink) => {
 
     cy.log('field First name')
     cy.get('[name="fname"]')
@@ -253,18 +253,19 @@ Cypress.Commands.add('buttonReset', (elementName, pageName, pageLink) => {
         .click()
     cy.log("Checking that we are on the page")
     cy.url()
-        .should('https://demo.guru99.com/telecom/addcustomer.php')
+        .should('eq','https://demo.guru99.com/telecom/addcustomer.php')
 });
 
 
-Cypress.Commands.add('emptyField', (elementName, pageName, pageLink) => {
+Cypress.Commands.add('getEmptyField', (elementName, pageName, pageLink) => {
+    cy.clearCookies()
     cy.log('button Submit')
     cy.xpath('//*[@id="main"]/div/form/div/div[9]/ul/li[1]/input')
         .should('be.visible')
         .click()
-    cy.log("Checking that we are on the page")
+    cy.log("home page")
     cy.url()
-        .should('https://demo.guru99.com/telecom/addcustomer.php')
+        .should('eq','https://demo.guru99.com/telecom/addcustomer.php')
 });
 
 
@@ -407,6 +408,7 @@ Cypress.Commands.add('top',(elementName, pageLink) => {
         .should('have.css', 'font-family', 'Montserrat, sans-serif')
         .should('have.css', 'background-color', 'rgb(246, 117, 94)')
         .should('have.css', 'border-bottom-color', 'rgb(255, 255, 255)')
+
 
     cy.log('Input fields')
     cy.get('input[type="text"]')

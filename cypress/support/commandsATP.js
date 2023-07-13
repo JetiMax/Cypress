@@ -52,7 +52,7 @@ Cypress.Commands.add('getFieldInputATP',() => {
         .type('0')
     cy.get('[type="submit"]')
         .should('be.visible').click();
-    cy.go('back');
+    cy.url().should('include','uid')
 })
 
 
@@ -85,6 +85,9 @@ Cypress.Commands.add('getResetClearFieldDropdown',() => {
     cy.get('[type="submit"]')
         .should('be.visible')
         .click();
+    cy.url().should('eq','https://demo.guru99.com/telecom/addtariffplans.php')
+    cy.xpath('//*[@id="main"]/div/form/div/div[1]/h3') // Monthly Rental
+        .should('be.visible')
 })
 
 
