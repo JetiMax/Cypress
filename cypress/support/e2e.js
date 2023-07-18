@@ -14,27 +14,19 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
+import './commandsATP';
+import './PaymentProcessCommands';
+import './addCustomerCommands';
+
 
 Cypress.on("uncaught:exception",(error) =>{
     console.error(error)
     return false
 })
 
-import './commandsATP'
 
-Cypress.on("uncaught:exception",(error) =>{
-    console.error(error)
-    return false
-})
 
-import './commandsPP'
-import './commandsAC'
-
-Cypress.on("uncaught:exception",(error) =>{
-    console.error(error)
-    return false
-})
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

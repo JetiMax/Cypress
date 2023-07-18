@@ -45,7 +45,7 @@ describe("Check Selenium Navbar Dropdown", () => {
         cy.getDropdown('Selenium', 'Selenium DatePicker Demo', '../../test/', 'https://demo.guru99.com/test/')
 
     })
-});+
+});
 
     describe("Check SEO Navbar Dropdown", () => {
 
